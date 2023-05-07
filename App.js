@@ -12,17 +12,16 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [initialRoute, setInitialRoute] = useState('Login');
 
   useEffect(() => {
     const checkToken = async () => {
       const token = await SecureStore.getItemAsync('jwtToken');
-      if (token) {
-        setIsLoggedIn(true);
-      } 
-        
       setIsLoading(false);
-      
+
+      if (token) {
+        setInitialRoute('Home');
+      }
     };
 
     checkToken();
@@ -39,12 +38,14 @@ export default function App() {
   
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {isLoggedIn ? (
-          <Stack.Screen name="Home" component={HomeScreen} options={{title: "ホーム" }} />
-        ) : (
-          <Stack.Screen name="Login" component={LoginScreen} options={{title: "ログイン" }} />
-        )}
+      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{
+        headerMode: 'screen',
+        headerTintColor: 'white',
+        headerStyle: { backgroundColor: 'tomato' },
+        headerBackVisible: false
+      }}>
+        <Stack.Screen name="Home" component={HomeScreen} options={{title: "ホーム", headerLeft: null, }} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{title: "ログイン", headerLeft: null, }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
