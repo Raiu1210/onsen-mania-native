@@ -16,7 +16,7 @@ export default function App() {
 
   useEffect(() => {
     const checkToken = async () => {
-      const token = await SecureStore.getItemAsync('jwtToken');
+      const token = await SecureStore.getItemAsync('access_token');
       setIsLoading(false);
 
       if (token) {
@@ -44,7 +44,7 @@ export default function App() {
         headerStyle: { backgroundColor: 'tomato' },
         headerBackVisible: false
       }}>
-        <Stack.Screen name="Home" component={HomeScreen} options={{title: "ホーム", headerLeft: null, }} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{title: "温泉マニア", headerLeft: null, }} />
         <Stack.Screen name="Login" component={LoginScreen} options={{title: "ログイン", headerLeft: null, }} />
       </Stack.Navigator>
     </NavigationContainer>
