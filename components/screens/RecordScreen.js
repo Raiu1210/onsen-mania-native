@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import DropDownPicker from 'react-native-dropdown-picker';
 
 // components
 import BarChartComponent from '../BarChartComponent';
