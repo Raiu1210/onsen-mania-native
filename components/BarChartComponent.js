@@ -1,0 +1,90 @@
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import { BarChart } from 'react-native-chart-kit';
+import DropDownPicker from 'react-native-dropdown-picker';
+
+const BarChartComponent = ({ myVisits, year }) => {
+  const [monthlyData, setMonthlyData] = useState([]);
+
+  useEffect(() => {
+    filterDataByYear(year);
+  }, [myVisits, year]);
+
+  const countDataByMonth = (data) => {
+    const counts = {};
+
+    data.forEach((visit) => {
+      const createdAt = new Date(visit.created_at);
+      const month = createdAt.getMonth() + 1;
+
+      if (counts[month]) {
+        counts[month] += 1;
+      } else {
+        counts[month] = 1;
+      }
+    });
+
+    return counts;
+  };
+
+  const filterDataByYear = (year) => {
+    const filteredData = myVisits.filter((visit) => {
+      const createdAt = new Date(visit.created_at);
+      return createdAt.getFullYear() === year;
+    });
+    const counts = countDataByMonth(filteredData);
+    const monthlyVisitCount = {};
+    for (let i = 1; i <= 12; i++) {
+      monthlyVisitCount[i.toString()] = counts[i.toString()] || 0;
+    }
+
+    setMonthlyData(monthlyVisitCount);
+  };
+
+  const formatYLabel = (value) => {
+    return Math.round(value).toString();
+  };
+
+
+  return (
+    <View style={styles.container}>
+      <Text>月別温泉訪問回数</Text>
+      <BarChart
+        data={{
+          labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+          datasets: [{ data: Object.values(monthlyData) }],
+        }}
+        width={400}
+        height={200}
+        yAxisLabel=""
+        chartConfig={{
+          backgroundGradientFrom: '#ffffff',
+          backgroundGradientTo: '#ffffff',
+          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          strokeWidth: 2,
+          barPercentage: 0.3,
+          useShadowColorFromDataset: false,
+          formatYLabel: formatYLabel,
+        }}
+        style={styles.barGraph}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexDirection: 'column'
+  },
+  barGraph: { 
+    alignSelf: 'flex-start',
+    marginVertical: 8, 
+    borderRadius: 16,
+  },
+});
+
+export default BarChartComponent;
