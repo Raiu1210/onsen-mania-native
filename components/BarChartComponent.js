@@ -3,12 +3,19 @@ import { View, StyleSheet, Text } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-const BarChartComponent = ({ myVisits, year }) => {
+const BarChartComponent = ({ myVisits }) => {
   const [monthlyData, setMonthlyData] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [uniqueYears, setUniqueYears] = useState([]);
 
   useEffect(() => {
+    const years = [...new Set(myVisits.map((visit) => new Date(visit.created_at).getFullYear()))];
+    const yearsData = years.map((year) => ({ label: year.toString(), value: year }))
+    
+    setUniqueYears(yearsData);
     filterDataByYear(year);
-  }, [myVisits, year]);
+  }, [myVisits]);
 
   const countDataByMonth = (data) => {
     const counts = {};
@@ -45,6 +52,10 @@ const BarChartComponent = ({ myVisits, year }) => {
     return Math.round(value).toString();
   };
 
+  const handleYearSelected = (year) => {
+    filterDataByYear(year);
+  };
+
 
   return (
     <View style={styles.container}>
@@ -67,6 +78,15 @@ const BarChartComponent = ({ myVisits, year }) => {
           formatYLabel: formatYLabel,
         }}
         style={styles.barGraph}
+      />
+      <DropDownPicker
+        open={open}
+        value={year}
+        items={uniqueYears}
+        setOpen={setOpen}
+        setValue={setYear}
+        containerStyle={styles.dropdownContainer}
+        onChangeValue={handleYearSelected}
       />
     </View>
   );
