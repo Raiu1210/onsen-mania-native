@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -59,35 +59,37 @@ const BarChartComponent = ({ myVisits }) => {
 
   return (
     <View style={styles.container}>
-      <Text>月別温泉訪問回数</Text>
-      <BarChart
-        data={{
-          labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-          datasets: [{ data: Object.values(monthlyData) }],
-        }}
-        width={400}
-        height={200}
-        yAxisLabel=""
-        chartConfig={{
-          backgroundGradientFrom: '#ffffff',
-          backgroundGradientTo: '#ffffff',
-          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          strokeWidth: 2,
-          barPercentage: 0.3,
-          useShadowColorFromDataset: false,
-          formatYLabel: formatYLabel,
-        }}
-        style={styles.barGraph}
-      />
-      <DropDownPicker
-        open={open}
-        value={year}
-        items={uniqueYears}
-        setOpen={setOpen}
-        setValue={setYear}
-        containerStyle={styles.dropdownContainer}
-        onChangeValue={handleYearSelected}
-      />
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>月別温泉訪問回数</Text>
+        <BarChart
+          data={{
+            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            datasets: [{ data: Object.values(monthlyData) }],
+          }}
+          width={Dimensions.get('window').width * 0.85}
+          height={200}
+          yAxisLabel=""
+          chartConfig={{
+            backgroundGradientFrom: '#5076A9',
+            backgroundGradientTo: '#5076A9',
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            strokeWidth: 2,
+            barPercentage: 0.3,
+            useShadowColorFromDataset: false,
+            formatYLabel: formatYLabel,
+          }}
+          style={styles.barGraph}
+        />
+        <DropDownPicker
+          open={open}
+          value={year}
+          items={uniqueYears}
+          setOpen={setOpen}
+          setValue={setYear}
+          containerStyle={styles.dropdownContainer}
+          onChangeValue={handleYearSelected}
+        />
+      </View>
     </View>
   );
 };
@@ -97,17 +99,29 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
-    flexDirection: 'column'
+  },
+  card: {
+    backgroundColor: '#1D3A65',
+    padding: 16,
+    borderRadius: 8,
+    width: '95%',
+    elevation: 3,
+  },
+  cardTitle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 16,
   },
   barGraph: { 
-    alignSelf: 'flex-start',
-    marginVertical: 8, 
+    alignSelf: 'left',
+    marginVertical: 8,
     borderRadius: 16,
   },
   dropdownContainer: {
     height: 40,
     width: 150,
+    alignSelf: 'center',
   },
 });
 
