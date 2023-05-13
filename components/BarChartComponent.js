@@ -105,6 +105,10 @@ const styles = StyleSheet.create({
     marginVertical: 8, 
     borderRadius: 16,
   },
+  dropdownContainer: {
+    height: 40,
+    width: 150,
+  },
 });
 
 export default BarChartComponent;
