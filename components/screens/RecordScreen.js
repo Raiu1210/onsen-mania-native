@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { BarChart } from 'react-native-chart-kit';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 // components
@@ -10,14 +9,12 @@ import BarChartComponent from '../BarChartComponent';
 
 const RecordScreen = () => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([]);
+  const [value, setValue] = useState(new Date().getFullYear().toString());
+  const [uniqueYears, setUniqueYears] = useState([]);
 
   const [accessToken, setAccessToken] = useState('');
   const [myVisits, setMyVisits] = useState([]);
   const [onsenList, setOnsenList] = useState([]);
-  const [uniqueYears, setUniqueYears] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
 
   useEffect(() => {
     const fetchData = async () => {
