@@ -8,10 +8,6 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import BarChartComponent from '../BarChartComponent';
 
 const RecordScreen = () => {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(new Date().getFullYear().toString());
-  const [uniqueYears, setUniqueYears] = useState([]);
-
   const [accessToken, setAccessToken] = useState('');
   const [myVisits, setMyVisits] = useState([]);
   const [onsenList, setOnsenList] = useState([]);
@@ -27,10 +23,6 @@ const RecordScreen = () => {
         const data = response.data;
         setMyVisits(data);
 
-        const years = [...new Set(data.map((visit) => new Date(visit.created_at).getFullYear().toString()))];
-        const yearsData = years.map((year) => ({ label: year, value: year }))
-        setUniqueYears(yearsData);
-
         const onsenResponse = await axios.get('https://monaledge.com:8888/onsen/onsen_list');
         const onsenData = onsenResponse.data;
         setOnsenList(onsenData);
@@ -45,16 +37,7 @@ const RecordScreen = () => {
   
   return (
     <View style={styles.container}>
-      <BarChartComponent  myVisits={myVisits} year={parseInt(value)} />
-      <DropDownPicker
-        open={open}
-        value={value}
-        items={uniqueYears}
-        setOpen={setOpen}
-        setValue={setValue}
-        containerStyle={styles.dropdownContainer}
-      />
-      <Text style={styles.text}>{parseInt(value)}</Text>
+      <BarChartComponent  myVisits={myVisits} />
     </View>
   );
 };
