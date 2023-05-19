@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, ScrollView , StyleSheet } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 // components
 import BarChartComponent from '../BarChartComponent';
+import ProgressChartComponent from '../ProgressChartComponent';
 
 const RecordScreen = () => {
-  const [accessToken, setAccessToken] = useState('');
   const [myVisits, setMyVisits] = useState([]);
   const [onsenList, setOnsenList] = useState([]);
 
@@ -25,6 +25,7 @@ const RecordScreen = () => {
         const onsenResponse = await axios.get('https://monaledge.com:8888/onsen/onsen_list');
         const onsenData = onsenResponse.data;
         setOnsenList(onsenData);
+
       } catch (error) {
         console.log('データの取得に失敗しました:', error);
       }
@@ -35,9 +36,12 @@ const RecordScreen = () => {
 
   
   return (
-    <View style={styles.container}>
-      <BarChartComponent  myVisits={myVisits} />
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <BarChartComponent myVisits={myVisits} />
+        <ProgressChartComponent onsenList={onsenList} myVisits={myVisits} />
+      </View>
+    </ScrollView>
   );
 };
 

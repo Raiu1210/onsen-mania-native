@@ -61,6 +61,15 @@ const BarChartComponent = ({ myVisits }) => {
     <View style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.cardTitle}>月別温泉訪問回数</Text>
+        <DropDownPicker
+          open={open}
+          value={year}
+          items={uniqueYears}
+          setOpen={setOpen}
+          setValue={setYear}
+          containerStyle={styles.dropdownContainer}
+          onChangeValue={handleYearSelected}
+        />
         <BarChart
           data={{
             labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
@@ -80,15 +89,7 @@ const BarChartComponent = ({ myVisits }) => {
           }}
           style={styles.barGraph}
         />
-        <DropDownPicker
-          open={open}
-          value={year}
-          items={uniqueYears}
-          setOpen={setOpen}
-          setValue={setYear}
-          containerStyle={styles.dropdownContainer}
-          onChangeValue={handleYearSelected}
-        />
+        
       </View>
     </View>
   );
@@ -106,6 +107,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: '95%',
     elevation: 3,
+    marginTop: 15
   },
   cardTitle: {
     color: '#FFFFFF',
@@ -122,6 +124,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: 150,
     alignSelf: 'center',
+    marginBottom: 20
   },
 });
 
