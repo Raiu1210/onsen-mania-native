@@ -1,54 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
+import { View, ScrollView , StyleSheet } from 'react-native';
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
+
+// components
+import BarChartComponent from '../BarChartComponent';
+import ProgressChartComponent from '../ProgressChartComponent';
 
 const RecordScreen = () => {
-  const [onsenData, setOnsenData] = useState([]);
-  const [myVisitData, setMyVisitData] = useState([]);
+  const [myVisits, setMyVisits] = useState([]);
+  const [onsenList, setOnsenList] = useState([]);
 
   useEffect(() => {
-    const fetchMyVisitData = async () => {
+    const fetchData = async () => {
       try {
         const accessToken = await SecureStore.getItemAsync('access_token');
         const headers = {
           Authorization: `Bearer ${accessToken}`,
         };
-        const response = await axios.get('https://monaledge.com:8888/users/my_visit', {
-          headers: headers,
-        });
+        const response = await axios.get('https://monaledge.com:8888/users/my_visit', { headers });
         const data = response.data;
-        setMyVisitData(data);
+        setMyVisits(data);
+
+        const onsenResponse = await axios.get('https://monaledge.com:8888/onsen/onsen_list');
+        const onsenData = onsenResponse.data;
+        setOnsenList(onsenData);
+
       } catch (error) {
-        console.log('Error fetching My Visit data:', error);
+        console.log('データの取得に失敗しました:', error);
       }
     };
 
-    const fetchOnsenData = async () => {
-      try {
-        const response = await axios.get('https://monaledge.com:8888/onsen/onsen_list');
-        const data = response.data;
-        setOnsenData(data);
-      } catch (error) {
-        console.log('Error fetching onsen data:', error);
-      }
-    };
-
-    fetchMyVisitData();
-    fetchOnsenData();
+    fetchData();
   }, []);
-    
+
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Record Screen</Text>
-      {myVisitData.map((visit, index) => (
-        <View key={index}>
-          <Text>Name: {visit.name}</Text>
-          <Text>Address: {visit.address}</Text>
-          {/* 他のデータを表示するために適宜追加 */}
-        </View>
-      ))}
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <BarChartComponent myVisits={myVisits} />
+        <ProgressChartComponent onsenList={onsenList} myVisits={myVisits} />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -58,10 +51,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  dropdownContainer: {
+    flex: 1,
+    height: 40,
+    width: 150,
   },
+  
 });
 
 export default RecordScreen;
