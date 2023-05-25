@@ -1,10 +1,91 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import axios from 'axios';
+import * as Location from 'expo-location';
 
 const SearchScreen = () => {
+  const [onsenList, setOnsenList] = useState([]);
+  const [selectedOnsen, setSelectedOnsen] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const onsenResponse = await axios.get('https://monaledge.com:8888/onsen/onsen_list');
+        const onsenData = onsenResponse.data;
+        setOnsenList(onsenData);
+
+      } catch (error) {
+        console.log('データの取得に失敗しました:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleMarkerPress = async (onsen) => {
+    const onsenDetailResponse = await axios.get(`https://monaledge.com:8888/onsen/onsen_detail?onsen_id=${onsen.id}`);
+    setSelectedOnsen(onsenDetailResponse.data);
+  };
+
+  const closeCard = () => {
+    setSelectedOnsen(null)
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Search Screen</Text>
+    <View style={{ flex: 1 }}>
+      <MapView
+          style={{ flex: 1 }}
+          initialRegion={{
+            latitude: 33.415032749403544,
+            longitude: 130.73956359560177,
+            latitudeDelta: 0.5,
+            longitudeDelta: 0.5,
+          }}
+        >
+          {onsenList.map((onsen) => (
+            <Marker
+              key={onsen.onsen_id}
+              coordinate={{
+                latitude: onsen.lat,
+                longitude: onsen.lon,
+              }}
+              title={onsen.name}
+              description={onsen.address}
+              onPress={() => handleMarkerPress(onsen)}
+            />
+        ))}
+      </MapView>
+
+      {selectedOnsen && (
+        <View style={styles.card}>
+          <TouchableOpacity style={styles.closeButton} onPress={closeCard}>
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+          <Text style={styles.cardTitle}>{selectedOnsen.name}</Text>
+          <Image source={{ uri: "https://monaledge.com:8888/thumbnails/" + selectedOnsen.image_path }} style={styles.image} />
+          <View style={styles.info}>
+            <Text style={styles.label}>住所 : </Text>
+            <Text style={styles.value}>{selectedOnsen.address}</Text>
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.label}>定休日 : </Text>
+            <Text style={styles.value}>{selectedOnsen.off_day}</Text>
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.label}>営業時間 : </Text>
+            <Text style={styles.value}>{selectedOnsen.open_time}</Text>
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.label}>駐車場  : </Text>
+            <Text style={styles.value}>{selectedOnsen.parking}</Text>
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.label}>サウナ  : </Text>
+            <Text style={styles.value}>{selectedOnsen.sauna}</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -12,11 +93,62 @@ const SearchScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+  },
+  map: {
+    flex: 1,
+  },
+  card: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 16,
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  image: {
+    width: '100%',
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  info: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  text: {
-    fontSize: 20,
+  label: {
+    fontWeight: 'bold',
+    marginRight: 8,
+    fontSize: 16,
+  },
+  value: {
+    flex: 1,
+    fontSize: 16,
+  },
+  cardAddress: {
+    fontSize: 16,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 32,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    borderRadius: 12,
+    marginRight: 10,
+    marginTop: 6
+  },
+  closeButtonText: {
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });
