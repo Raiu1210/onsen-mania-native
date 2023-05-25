@@ -37,8 +37,6 @@ const ProgressChartDesigned = ({ onsenList, myVisits, pref }) => {
     });
     visitedOnsenCount = Object.keys(visitCounts).length;
     data.data[0] = visitedOnsenCount / totalOnsenCount;
-
-    console.log(data)
   }
 
   
