@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Button } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, Image, Linking, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
+
 
 const SearchScreen = () => {
   const [onsenList, setOnsenList] = useState([]);
@@ -30,6 +33,48 @@ const SearchScreen = () => {
   const closeCard = () => {
     setSelectedOnsen(null)
   };
+
+  const checkIn = async (onsenId) => {
+    try {
+      const token = await SecureStore.getItemAsync('access_token');
+      const response = await axios.post(
+        'https://monaledge.com:8888/users/checkin',
+        { onsen_id: onsenId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.result == 0) {
+        Alert.alert('成功', 'チェックインが成功しました');
+      } else {
+        Alert.alert('エラー', 'チェックインに失敗しました');
+      }
+    } catch (error) {
+      console.error('エラー:', error);
+    }
+  }
+
+  const handleCheckIn = async (onsenId) => {
+    Alert.alert(
+      'チェックイン',
+      'この温泉への訪問を記録しますか？',
+      [
+        { text: 'キャンセル', style: 'cancel' },
+        { text: 'チェックイン', onPress: () => checkIn(onsenId) },
+      ]
+    );
+  };
+  const handleCall = async (phoneNumber) => {
+    Linking.openURL(`tel:${phoneNumber}`);
+  };
+  const handleOpenWeb = async (url) => {
+    Linking.openURL(url);
+  };
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -61,9 +106,9 @@ const SearchScreen = () => {
           <View style={styles.info}>
             <Text style={styles.cardTitle}>{selectedOnsen.name}</Text>
             <View style={styles.buttonSpacer} />
-            <View style={styles.closeButtonContainer}>
-              <Button title="X" style={styles.closeButton} onPress={closeCard} />
-            </View>
+            <TouchableOpacity style={styles.closeButton} onPress={closeCard}>
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
           </View>
           
           <Image source={{ uri: "https://monaledge.com:8888/thumbnails/" + selectedOnsen.image_path }} style={styles.image} />
@@ -87,6 +132,18 @@ const SearchScreen = () => {
             <Text style={styles.label}>サウナ  : </Text>
             <Text style={styles.value}>{selectedOnsen.sauna}</Text>
           </View>
+          
+          {/* each action button */}
+          <View style={styles.buttonContainer}>
+            <Ionicons style={styles.actionButton} name={'checkmark-circle'} size={48} color="green" onPress={() => handleCheckIn(selectedOnsen.id)} />
+            {selectedOnsen.tel && (
+              <Ionicons style={styles.actionButton} name={'call'} size={48} color="green" onPress={() => handleCall(selectedOnsen.tel)} />
+            )}
+            
+            {selectedOnsen.url && (
+              <Ionicons style={styles.actionButton} name={'globe-outline'} size={48} color="blue" onPress={() => handleOpenWeb(selectedOnsen.url)} />
+            )}
+          </View>
         </View>
       )}
     </View>
@@ -94,12 +151,6 @@ const SearchScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-  },
   card: {
     position: 'absolute',
     bottom: 0,
@@ -112,7 +163,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 80,
+    height: 100,
     borderRadius: 8,
     marginBottom: 16,
   },
@@ -134,9 +185,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
   },
-  cardAddress: {
-    fontSize: 16,
-  },
   closeButton: {
     width: 24,
     height: 24,
@@ -144,17 +192,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
     borderRadius: 12,
+    marginBottom: 8
   },
   closeButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
   },
-  closeButtonContainer: {
-    marginLeft: 16,
-  },
   buttonSpacer: {
     flex: 1,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginTop: 16,
+  },
+  actionButton: {
+    marginRight: 16,
+  }
 });
 
 export default SearchScreen;
