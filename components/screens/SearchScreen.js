@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, Button } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
-import * as Location from 'expo-location';
 
 const SearchScreen = () => {
   const [onsenList, setOnsenList] = useState([]);
@@ -59,10 +58,14 @@ const SearchScreen = () => {
 
       {selectedOnsen && (
         <View style={styles.card}>
-          <TouchableOpacity style={styles.closeButton} onPress={closeCard}>
-            <Text style={styles.closeButtonText}>X</Text>
-          </TouchableOpacity>
-          <Text style={styles.cardTitle}>{selectedOnsen.name}</Text>
+          <View style={styles.info}>
+            <Text style={styles.cardTitle}>{selectedOnsen.name}</Text>
+            <View style={styles.buttonSpacer} />
+            <View style={styles.closeButtonContainer}>
+              <Button title="X" style={styles.closeButton} onPress={closeCard} />
+            </View>
+          </View>
+          
           <Image source={{ uri: "https://monaledge.com:8888/thumbnails/" + selectedOnsen.image_path }} style={styles.image} />
           <View style={styles.info}>
             <Text style={styles.label}>住所 : </Text>
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 150,
+    height: 80,
     borderRadius: 8,
     marginBottom: 16,
   },
@@ -135,21 +138,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   closeButton: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 32,
+    width: 24,
     height: 24,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
     borderRadius: 12,
-    marginRight: 10,
-    marginTop: 6
   },
   closeButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  closeButtonContainer: {
+    marginLeft: 16,
+  },
+  buttonSpacer: {
+    flex: 1,
   },
 });
 
