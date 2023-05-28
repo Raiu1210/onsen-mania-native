@@ -9,7 +9,6 @@ import * as SecureStore from 'expo-secure-store';
 const SearchScreen = () => {
   const [onsenList, setOnsenList] = useState([]);
   const [selectedOnsen, setSelectedOnsen] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -103,49 +102,49 @@ const SearchScreen = () => {
       </MapView>
 
       {selectedOnsen && (
-          <View style={styles.card}>
-            <View style={styles.info}>
-              <Text style={styles.cardTitle}>{selectedOnsen.name}</Text>
-              <View style={styles.buttonSpacer} />
-              <TouchableOpacity style={styles.closeButton} onPress={closeCard}>
-                <Text style={styles.closeButtonText}>X</Text>
-              </TouchableOpacity>
-            </View>
-            
-            <Image source={{ uri: "https://monaledge.com:8888/thumbnails/" + selectedOnsen.image_path }} style={styles.image} />
-            <View style={styles.info}>
-              <Text style={styles.label}>住所 : </Text>
-              <Text style={styles.value}>{selectedOnsen.address}</Text>
-            </View>
-            <View style={styles.info}>
-              <Text style={styles.label}>定休日 : </Text>
-              <Text style={styles.value}>{selectedOnsen.off_day}</Text>
-            </View>
-            <View style={styles.info}>
-              <Text style={styles.label}>営業時間 : </Text>
-              <Text style={styles.value}>{selectedOnsen.open_time}</Text>
-            </View>
-            <View style={styles.info}>
-              <Text style={styles.label}>駐車場  : </Text>
-              <Text style={styles.value}>{selectedOnsen.parking}</Text>
-            </View>
-            <View style={styles.info}>
-              <Text style={styles.label}>サウナ  : </Text>
-              <Text style={styles.value}>{selectedOnsen.sauna}</Text>
-            </View>
-            
-            {/* each action button */}
-            <View style={styles.buttonContainer}>
-              <Ionicons style={styles.actionButton} name={'checkmark-circle'} size={48} color="green" onPress={() => handleCheckIn(selectedOnsen.id)} />
-              {selectedOnsen.tel && (
-                <Ionicons style={styles.actionButton} name={'call'} size={48} color="green" onPress={() => handleCall(selectedOnsen.tel)} />
-              )}
-              
-              {selectedOnsen.url && (
-                <Ionicons style={styles.actionButton} name={'globe-outline'} size={48} color="blue" onPress={() => handleOpenWeb(selectedOnsen.url)} />
-              )}
-            </View>
+        <View style={styles.card}>
+          <View style={styles.info}>
+            <Text style={styles.cardTitle}>{selectedOnsen.name}</Text>
+            <View style={styles.buttonSpacer} />
+            <TouchableOpacity style={styles.closeButton} onPress={closeCard}>
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
           </View>
+          
+          <Image source={{ uri: "https://monaledge.com:8888/thumbnails/" + selectedOnsen.image_path }} style={styles.image} />
+          <View style={styles.info}>
+            <Text style={styles.label}>住所 : </Text>
+            <Text style={styles.value}>{selectedOnsen.address}</Text>
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.label}>定休日 : </Text>
+            <Text style={styles.value}>{selectedOnsen.off_day}</Text>
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.label}>営業時間 : </Text>
+            <Text style={styles.value}>{selectedOnsen.open_time}</Text>
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.label}>駐車場  : </Text>
+            <Text style={styles.value}>{selectedOnsen.parking}</Text>
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.label}>サウナ  : </Text>
+            <Text style={styles.value}>{selectedOnsen.sauna}</Text>
+          </View>
+          
+          {/* each action button */}
+          <View style={styles.buttonContainer}>
+            <Ionicons style={styles.actionButton} name={'checkmark-circle'} size={48} color="green" onPress={() => handleCheckIn(selectedOnsen.id)} />
+            {selectedOnsen.tel && (
+              <Ionicons style={styles.actionButton} name={'call'} size={48} color="green" onPress={() => handleCall(selectedOnsen.tel)} />
+            )}
+            
+            {selectedOnsen.url && (
+              <Ionicons style={styles.actionButton} name={'globe-outline'} size={48} color="blue" onPress={() => handleOpenWeb(selectedOnsen.url)} />
+            )}
+          </View>
+        </View>
       )}
     </View>
   );
