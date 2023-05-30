@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Button } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
@@ -8,6 +8,10 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
+
+  const handleSignup = () => {
+    navigation.navigate('Signup');
+  };
 
   const handleLogin = async () => {
     try {
@@ -55,6 +59,8 @@ const LoginScreen = () => {
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.loginButtonText}>ログイン</Text>
       </TouchableOpacity>
+
+      <Button title="Sign Up" onPress={handleSignup} />
     </View>
   );
 };
