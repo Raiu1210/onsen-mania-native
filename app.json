@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "onsen-mania-native",
-    "slug": "onsen-mania-native",
+    "name": "温泉マニア",
+    "slug": "onsen-mania",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/onsen-icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,7 +17,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {
