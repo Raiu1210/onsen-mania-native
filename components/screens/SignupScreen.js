@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Text, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 const SignupScreen = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigation = useNavigation();
 
   const handleSignup = async () => {
     try {
@@ -19,7 +21,7 @@ const SignupScreen = () => {
         Alert.alert('ユーザ登録完了', 'サインアップが成功しました');
         navigation.navigate('Login');
       } else {
-        Alert.alert('エラー', 'サインアップに失敗しました。');
+        Alert.alert('エラー', `サインアップに失敗しました。${response.data.message}`);
       }
     } catch (error) {
       console.error(error);
