@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [initialRoute, setInitialRoute] = useState('Login');
+  const [initialRoute, setInitialRoute] = useState('');
 
   useEffect(() => {
     const checkToken = async () => {
@@ -22,6 +22,8 @@ export default function App() {
 
       if (token) {
         setInitialRoute('Home');
+      } else {
+        setInitialRoute('Login');
       }
     };
 
