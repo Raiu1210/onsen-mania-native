@@ -7,12 +7,21 @@ import * as SecureStore from 'expo-secure-store';
 
 
 const SearchScreen = () => {
+  const [myVisits, setMyVisits] = useState([]);
   const [onsenList, setOnsenList] = useState([]);
   const [selectedOnsen, setSelectedOnsen] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const accessToken = await SecureStore.getItemAsync('access_token');
+        const headers = {
+          Authorization: `Bearer ${accessToken}`,
+        };
+        const response = await axios.get('https://monaledge.com:8888/users/my_visit', { headers });
+        const data = response.data;
+        setMyVisits(data);
+
         const onsenResponse = await axios.get('https://monaledge.com:8888/onsen/onsen_list');
         const onsenData = onsenResponse.data;
         setOnsenList(onsenData);
@@ -53,6 +62,13 @@ const SearchScreen = () => {
       } else {
         Alert.alert('エラー', 'チェックインに失敗しました');
       }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const response2 = await axios.get('https://monaledge.com:8888/users/my_visit', { headers });
+      const data = response2.data;
+      setMyVisits(data);
     } catch (error) {
       console.error('エラー:', error);
     }
@@ -96,6 +112,7 @@ const SearchScreen = () => {
               }}
               title={onsen.name}
               description={onsen.address}
+              pinColor={myVisits.some((visit) => visit.onsen_id === onsen.id) ? 'cyan' : 'red'}
               onPress={() => handleMarkerPress(onsen)}
             />
         ))}

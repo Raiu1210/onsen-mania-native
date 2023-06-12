@@ -69,6 +69,15 @@ const RecordScreen = () => {
     ]);
   };
 
+  const handleLogout = async () => {
+    try {
+      await SecureStore.deleteItemAsync('access_token');
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error('ログアウト時のエラー:', error);
+    }
+  };
+
   
   return (
     <ScrollView
@@ -79,6 +88,7 @@ const RecordScreen = () => {
       <View style={styles.container}>
         <BarChartComponent myVisits={myVisits} />
         <ProgressChartComponent onsenList={onsenList} myVisits={myVisits} />
+        <Button title="ログアウト" onPress={handleLogout} color="#FF0000" />
         <Button title="ユーザ削除" onPress={confirmUserDelete} color="#FF0000" />
       </View>
     </ScrollView>
