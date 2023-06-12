@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -12,15 +12,17 @@ const OnsenCardComponent = ({ visit }) => {
     const month = dateTime.getMonth() + 1;
     const day = dateTime.getDate();
 
-    // 時間の取得
-    const hours = dateTime.getHours();
-    const minutes = dateTime.getMinutes();
-    const seconds = dateTime.getSeconds();
-
     // 出力の組み立て
-    const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    const formattedDateTime = `${year}年${month}月${day}日`;
 
     return formattedDateTime;
+  };
+
+  const handleCall = async (phoneNumber) => {
+    Linking.openURL(`tel:${phoneNumber}`);
+  };
+  const handleOpenWeb = async (url) => {
+    Linking.openURL(url);
   };
 
   return (
@@ -41,7 +43,6 @@ const OnsenCardComponent = ({ visit }) => {
       
       {/* each action button */}
       <View style={styles.buttonContainer}>
-        <Ionicons style={styles.actionButton} name={'checkmark-circle'} size={48} color="green" onPress={() => handleCheckIn(visit.id)} />
         {visit.tel && (
           <Ionicons style={styles.actionButton} name={'call'} size={48} color="green" onPress={() => handleCall(visit.tel)} />
         )}
