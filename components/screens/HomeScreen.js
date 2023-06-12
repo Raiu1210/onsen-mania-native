@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -11,19 +9,7 @@ import RecordScreen from './RecordScreen';
 
 const Tab = createBottomTabNavigator();
 
-
 const HomeScreen = () => {
-  const [accessToken, setAccessToken] = useState('');
-
-  useEffect(() => {
-    getAccessToken();
-  }, []);
-
-  const getAccessToken = async () => {
-    const token = await SecureStore.getItemAsync('access_token');
-    setAccessToken(token || '');
-  };
-
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -52,16 +38,5 @@ const HomeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-});
 
 export default HomeScreen;
