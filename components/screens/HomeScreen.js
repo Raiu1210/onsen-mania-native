@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import * as SecureStore from 'expo-secure-store';
+import { useNavigation } from '@react-navigation/native';
 
 // screens
 import CheckInScreen from './CheckInScreen';
@@ -10,6 +12,23 @@ import RecordScreen from './RecordScreen';
 const Tab = createBottomTabNavigator();
 
 const HomeScreen = () => {
+  const navigation = useNavigation();
+
+  const checkToken = async () => {
+    try {
+      const accessToken = await SecureStore.getItemAsync('access_token');
+      if (accessToken == null) {
+        navigation.navigate('Login');
+      }
+    } catch (error) {
+      console.log('データの取得に失敗しました:', error);
+    }
+  };
+
+  useEffect(() => {
+    checkToken();
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

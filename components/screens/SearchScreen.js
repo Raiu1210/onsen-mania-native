@@ -112,7 +112,7 @@ const SearchScreen = () => {
               }}
               title={onsen.name}
               description={onsen.address}
-              pinColor={myVisits.some((visit) => visit.onsen_id === onsen.id) ? 'cyan' : 'red'}
+              pinColor={myVisits.some((visit) => visit.onsen_id === onsen.id) ? 'blue' : 'red'}
               onPress={() => handleMarkerPress(onsen)}
             />
         ))}
