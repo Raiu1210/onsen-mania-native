@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -12,36 +10,9 @@ import SignupScreen from './components/screens/SignupScreen';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [initialRoute, setInitialRoute] = useState('');
-
-  useEffect(() => {
-    const checkToken = async () => {
-      const token = await SecureStore.getItemAsync('access_token');
-      setIsLoading(false);
-
-      if (token) {
-        setInitialRoute('Home');
-      } else {
-        setInitialRoute('Login');
-      }
-    };
-
-    checkToken();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
-
-  
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{
+      <Stack.Navigator initialRouteName={'Home'} screenOptions={{
         headerMode: 'screen',
         headerTintColor: 'white',
         headerStyle: { backgroundColor: 'tomato' },
