@@ -2,7 +2,7 @@
   "expo": {
     "name": "温泉マニア",
     "slug": "onsen-mania",
-    "version": "1.0.4",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/onsen-icon.png",
     "splash": {
@@ -18,7 +18,10 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.raiu.onsenmania"
+      "bundleIdentifier": "com.raiu.onsenmania",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "地図の初期位置を自分の位置にするために現在地を取得します"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -34,6 +37,20 @@
       "eas": {
         "projectId": "78bb417d-876f-4a8e-9b91-4de74e09f484"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-9410270200655875~4253258868",
+    "ios_app_id": "ca-app-pub-9410270200655875~4253258868"
   }
 }
