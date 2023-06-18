@@ -4,12 +4,36 @@ import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 
 
 const SearchScreen = () => {
   const [myVisits, setMyVisits] = useState([]);
   const [onsenList, setOnsenList] = useState([]);
   const [selectedOnsen, setSelectedOnsen] = useState(null);
+  const [location, setLocation] = useState(null);
+
+
+  const getLocationAsync = async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permission to access location was denied');
+        return;
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation.coords);
+      console.log(currentLocation.coords)
+    } catch (console) {
+      setLocation({
+        "latitude": 33.36206587295187,
+        "longitude": 130.71670752477976,
+      })
+    }
+  };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,17 +45,18 @@ const SearchScreen = () => {
         const response = await axios.get('https://monaledge.com:8888/users/my_visit', { headers });
         const data = response.data;
         setMyVisits(data);
-
+  
         const onsenResponse = await axios.get('https://monaledge.com:8888/onsen/onsen_list');
         const onsenData = onsenResponse.data;
         setOnsenList(onsenData);
-
+  
       } catch (error) {
         console.log('データの取得に失敗しました:', error);
       }
     };
 
     fetchData();
+    getLocationAsync();
   }, []);
 
   const handleMarkerPress = async (onsen) => {
@@ -91,14 +116,21 @@ const SearchScreen = () => {
     Linking.openURL(url);
   };
 
+  if (!location) {
+    return (
+    <View style={{ flex: 1 }} >
+      <Text>Loading...</Text>
+    </View>);
+  }
+
 
   return (
     <View style={{ flex: 1 }}>
       <MapView
           style={{ flex: 1 }}
           initialRegion={{
-            latitude: 33.415032749403544,
-            longitude: 130.73956359560177,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.5,
             longitudeDelta: 0.5,
           }}
