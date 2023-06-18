@@ -4,34 +4,57 @@ import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import * as Location from 'expo-location';
 
 
 const SearchScreen = () => {
   const [myVisits, setMyVisits] = useState([]);
   const [onsenList, setOnsenList] = useState([]);
   const [selectedOnsen, setSelectedOnsen] = useState(null);
+  const [location, setLocation] = useState(null);
+
+  
+  const getLocationAsync = async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permission to access location was denied');
+        return;
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation.coords);
+    } catch (console) {
+      setLocation({
+        "latitude": 33.36206587295187,
+        "longitude": 130.71670752477976,
+      })
+    }
+  };
+
+
+  const fetchData = async () => {
+    try {
+      const accessToken = await SecureStore.getItemAsync('access_token');
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+      };
+      const response = await axios.get('https://monaledge.com:8888/users/my_visit', { headers });
+      const data = response.data;
+      setMyVisits(data);
+
+      const onsenResponse = await axios.get('https://monaledge.com:8888/onsen/onsen_list');
+      const onsenData = onsenResponse.data;
+      setOnsenList(onsenData);
+
+    } catch (error) {
+      console.log('データの取得に失敗しました:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const accessToken = await SecureStore.getItemAsync('access_token');
-        const headers = {
-          Authorization: `Bearer ${accessToken}`,
-        };
-        const response = await axios.get('https://monaledge.com:8888/users/my_visit', { headers });
-        const data = response.data;
-        setMyVisits(data);
-
-        const onsenResponse = await axios.get('https://monaledge.com:8888/onsen/onsen_list');
-        const onsenData = onsenResponse.data;
-        setOnsenList(onsenData);
-
-      } catch (error) {
-        console.log('データの取得に失敗しました:', error);
-      }
-    };
-
     fetchData();
+    getLocationAsync();
   }, []);
 
   const handleMarkerPress = async (onsen) => {
@@ -43,12 +66,19 @@ const SearchScreen = () => {
     setSelectedOnsen(null)
   };
 
-  const checkIn = async (onsenId) => {
+  const tweetOnsen = async (onsen) => {
+    const shareUrl = 'https://apps.apple.com/jp/app/%E6%B8%A9%E6%B3%89%E3%83%9E%E3%83%8B%E3%82%A2/id6449859396'
+    const text = `${onsen.name}に来たよ！ \n\n\n#温泉マニア \n#温泉 \n#${onsen.name}\n\n`
+    const href = `https://twitter.com/intent/tweet?url=${shareUrl}&text=${text}`
+    Linking.openURL(href);
+  }
+
+  const checkIn = async (onsen) => {
     try {
       const token = await SecureStore.getItemAsync('access_token');
       const response = await axios.post(
         'https://monaledge.com:8888/users/checkin',
-        { onsen_id: onsenId },
+        { onsen_id: onsen.id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +88,11 @@ const SearchScreen = () => {
       );
 
       if (response.data.result == 0) {
-        Alert.alert('成功', 'チェックインが成功しました');
+        Alert.alert('成功', 'チェックインが成功しました。温泉に来たことをツイートしませんか？',
+        [
+          { text: 'しない', style: 'cancel' },
+          { text: 'ツイート', onPress: () => tweetOnsen(onsen) },
+        ]);
       } else {
         Alert.alert('エラー', 'チェックインに失敗しました');
       }
@@ -74,13 +108,13 @@ const SearchScreen = () => {
     }
   }
 
-  const handleCheckIn = async (onsenId) => {
+  const handleCheckIn = async (onsen) => {
     Alert.alert(
       'チェックイン',
       'この温泉への訪問を記録しますか？',
       [
         { text: 'キャンセル', style: 'cancel' },
-        { text: 'チェックイン', onPress: () => checkIn(onsenId) },
+        { text: 'チェックイン', onPress: () => checkIn(onsen) },
       ]
     );
   };
@@ -91,14 +125,21 @@ const SearchScreen = () => {
     Linking.openURL(url);
   };
 
+  if (!location) {
+    return (
+    <View style={{ flex: 1 }} >
+      <Text>Loading...</Text>
+    </View>);
+  }
+
 
   return (
     <View style={{ flex: 1 }}>
       <MapView
           style={{ flex: 1 }}
           initialRegion={{
-            latitude: 33.415032749403544,
-            longitude: 130.73956359560177,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.5,
             longitudeDelta: 0.5,
           }}
@@ -152,7 +193,7 @@ const SearchScreen = () => {
           
           {/* each action button */}
           <View style={styles.buttonContainer}>
-            <Ionicons style={styles.actionButton} name={'checkmark-circle'} size={48} color="green" onPress={() => handleCheckIn(selectedOnsen.id)} />
+            <Ionicons style={styles.actionButton} name={'checkmark-circle'} size={48} color="green" onPress={() => handleCheckIn(selectedOnsen)} />
             {selectedOnsen.tel && (
               <Ionicons style={styles.actionButton} name={'call'} size={48} color="green" onPress={() => handleCall(selectedOnsen.tel)} />
             )}
