@@ -2,7 +2,7 @@
   "expo": {
     "name": "温泉マニア",
     "slug": "onsen-mania",
-    "version": "1.2.0",
+    "version": "1.2.3",
     "orientation": "portrait",
     "icon": "./assets/onsen-icon.png",
     "splash": {

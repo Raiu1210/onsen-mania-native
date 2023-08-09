@@ -19,6 +19,10 @@ const SearchScreen = () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         console.error('Permission to access location was denied');
+        setLocation({
+          "latitude": 35.68432953217299,
+          "longitude": 139.7528818864777,
+        })
         return;
       }
 
@@ -26,8 +30,8 @@ const SearchScreen = () => {
       setLocation(currentLocation.coords);
     } catch (console) {
       setLocation({
-        "latitude": 33.36206587295187,
-        "longitude": 130.71670752477976,
+        "latitude": 35.68432953217299,
+        "longitude": 139.7528818864777,
       })
     }
   };
@@ -137,6 +141,7 @@ const SearchScreen = () => {
     <View style={{ flex: 1 }}>
       <MapView
           style={{ flex: 1 }}
+          showsUserLocation={true}
           initialRegion={{
             latitude: location.latitude,
             longitude: location.longitude,
