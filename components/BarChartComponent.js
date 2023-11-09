@@ -116,7 +116,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   barGraph: { 
-    alignSelf: 'left',
     marginVertical: 8,
     borderRadius: 16,
   },
