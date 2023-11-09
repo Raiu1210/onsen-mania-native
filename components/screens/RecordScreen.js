@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView , StyleSheet, RefreshControl, Button, Alert } from 'react-native';
+import { View, ScrollView , StyleSheet, RefreshControl, Text, Button, Alert } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native';
@@ -12,6 +12,7 @@ const RecordScreen = () => {
   const [myVisits, setMyVisits] = useState([]);
   const [onsenList, setOnsenList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
   const fetchData = async () => {
@@ -27,6 +28,7 @@ const RecordScreen = () => {
       const onsenResponse = await axios.get('https://monaledge.com:8888/onsen/onsen_list');
       const onsenData = onsenResponse.data;
       setOnsenList(onsenData);
+      setLoading(false)
     } catch (error) {
       console.log('データの取得に失敗しました:', error);
     }
@@ -78,21 +80,27 @@ const RecordScreen = () => {
     }
   };
 
+
+  if (loading) {
+    return (<Text>loading</Text>)
+  } else {
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+        }
+      >
+        <View style={styles.container}>
+          <BarChartComponent myVisits={myVisits} />
+          <ProgressChartComponent onsenList={onsenList} myVisits={myVisits} />
+          <Button title="ログアウト" onPress={handleLogout} color="#FF0000" />
+          <Button title="ユーザ削除" onPress={confirmUserDelete} color="#FF0000" />
+        </View>
+      </ScrollView>
+    );
+  }
   
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
-      }
-    >
-      <View style={styles.container}>
-        <BarChartComponent myVisits={myVisits} />
-        <ProgressChartComponent onsenList={onsenList} myVisits={myVisits} />
-        <Button title="ログアウト" onPress={handleLogout} color="#FF0000" />
-        <Button title="ユーザ削除" onPress={confirmUserDelete} color="#FF0000" />
-      </View>
-    </ScrollView>
-  );
+  
 };
 
 const styles = StyleSheet.create({
