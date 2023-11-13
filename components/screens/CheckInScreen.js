@@ -2,6 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { useIsFocused } from '@react-navigation/native';
+
+function useOnceOnFocusEffect(effect) {
+  const isFocused = useIsFocused();
+  const [hasRun, setHasRun] = useState(false);
+
+  useEffect(() => {
+    if (isFocused && !hasRun) {
+      effect();
+      setHasRun(true);
+    }
+  }, [isFocused, hasRun, effect]);
+}
 
 // components
 import OnsenCardComponent from '../OnsenCardComponent';
@@ -20,7 +33,7 @@ const CheckInScreen = () => {
       const data = response.data;
       setMyVisits(data);
     } catch (error) {
-      console.log('データの取得に失敗しました:', error);
+      console.log('データの取得に失敗しました from CheckScreen.js:', error);
     }
   };
 
@@ -28,14 +41,19 @@ const CheckInScreen = () => {
     fetchData();
   }, []);
 
+  useOnceOnFocusEffect(() => {
+    console.log("focused? Checkin")
+    fetchData();
+  });
+
   return (
     <ScrollView style={styles.container}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
       }
     >
-      {myVisits.map((visit) => (
-        <OnsenCardComponent visit={visit} />
+      {myVisits.map((visit, index) => (
+        <OnsenCardComponent key={index} visit={visit} />
       ))}
     </ScrollView>
   );

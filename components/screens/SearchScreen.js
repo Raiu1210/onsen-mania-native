@@ -6,7 +6,6 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
 
-
 const SearchScreen = () => {
   const [myVisits, setMyVisits] = useState([]);
   const [onsenList, setOnsenList] = useState([]);
@@ -52,14 +51,14 @@ const SearchScreen = () => {
       setOnsenList(onsenData);
 
     } catch (error) {
-      console.log('データの取得に失敗しました:', error);
+      console.log('データの取得に失敗しました: from SearchScreen.js', error);
     }
   };
 
   useEffect(() => {
     fetchData();
     getLocationAsync();
-  }, []);
+  });
 
   const handleMarkerPress = async (onsen) => {
     const onsenDetailResponse = await axios.get(`https://monaledge.com:8888/onsen/onsen_detail?onsen_id=${onsen.id}`);
@@ -149,9 +148,9 @@ const SearchScreen = () => {
             longitudeDelta: 0.5,
           }}
         >
-          {onsenList.map((onsen) => (
+          {onsenList.map((onsen, index) => (
             <Marker
-              key={onsen.onsen_id}
+              key={index}
               coordinate={{
                 latitude: onsen.lat,
                 longitude: onsen.lon,

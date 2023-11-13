@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView , StyleSheet, RefreshControl, Text, Button, Alert } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 
 // components
 import BarChartComponent from '../BarChartComponent';
@@ -30,13 +30,18 @@ const RecordScreen = () => {
       setOnsenList(onsenData);
       setLoading(false)
     } catch (error) {
-      console.log('データの取得に失敗しました:', error);
+      console.log('データの取得に失敗しました: from RecordScreen.js', error);
+      console.log(error)
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
 
   const handleUserDelete = async () => {
     try {
@@ -99,8 +104,6 @@ const RecordScreen = () => {
       </ScrollView>
     );
   }
-  
-  
 };
 
 const styles = StyleSheet.create({
