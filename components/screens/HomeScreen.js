@@ -21,7 +21,8 @@ const HomeScreen = () => {
         navigation.navigate('Login');
       }
     } catch (error) {
-      console.log('データの取得に失敗しました:', error);
+      console.log('トークンがセットされていません from HomeScreen.js:', error);
+      console.log(error)
     }
   };
 
