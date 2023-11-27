@@ -149,9 +149,9 @@ const SearchScreen = () => {
             longitudeDelta: 0.5,
           }}
         >
-          {onsenList.map((onsen) => (
+          {onsenList.map((onsen, index) => (
             <Marker
-              key={onsen.onsen_id}
+              key={index}
               coordinate={{
                 latitude: onsen.lat,
                 longitude: onsen.lon,

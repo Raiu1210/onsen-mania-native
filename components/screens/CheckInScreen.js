@@ -34,8 +34,8 @@ const CheckInScreen = () => {
         <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
       }
     >
-      {myVisits.map((visit) => (
-        <OnsenCardComponent visit={visit} />
+      {myVisits.map((visit, index) => (
+        <OnsenCardComponent key={index} visit={visit} />
       ))}
     </ScrollView>
   );
