@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, Image, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
@@ -11,7 +11,7 @@ const SearchScreen = () => {
   const [onsenList, setOnsenList] = useState([]);
   const [selectedOnsen, setSelectedOnsen] = useState(null);
   const [location, setLocation] = useState(null);
-
+  const [region, setRegion] = useState(null);
   
   const getLocationAsync = async () => {
     try {
@@ -128,13 +128,27 @@ const SearchScreen = () => {
     Linking.openURL(url);
   };
 
+  const onRegionChangeComplete = useCallback((newRegion) => {
+    setRegion(newRegion);
+  }, []);
+
+  const filteredOnsenList = useCallback(() => {
+    if (!region) return onsenList;
+
+    return onsenList.filter(onsen => {
+      const latDiff = Math.abs(onsen.lat - region.latitude);
+      const lonDiff = Math.abs(onsen.lon - region.longitude);
+      return latDiff <= region.latitudeDelta / 2 && lonDiff <= region.longitudeDelta / 2;
+    });
+  }, [onsenList, region]);
+
+
   if (!location) {
     return (
     <View style={{ flex: 1 }} >
       <Text>Loading...</Text>
     </View>);
   }
-
 
   return (
     <View style={{ flex: 1 }}>
@@ -147,8 +161,9 @@ const SearchScreen = () => {
             latitudeDelta: 0.5,
             longitudeDelta: 0.5,
           }}
+          onRegionChangeComplete={onRegionChangeComplete}
         >
-          {onsenList.map((onsen, index) => (
+          {filteredOnsenList().map((onsen, index) => (
             <Marker
               key={index}
               coordinate={{
