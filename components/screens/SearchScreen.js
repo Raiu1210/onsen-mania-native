@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, Image, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
@@ -6,13 +6,12 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
 
-
 const SearchScreen = () => {
   const [myVisits, setMyVisits] = useState([]);
   const [onsenList, setOnsenList] = useState([]);
   const [selectedOnsen, setSelectedOnsen] = useState(null);
   const [location, setLocation] = useState(null);
-
+  const [region, setRegion] = useState(null);
   
   const getLocationAsync = async () => {
     try {
@@ -52,14 +51,14 @@ const SearchScreen = () => {
       setOnsenList(onsenData);
 
     } catch (error) {
-      console.log('データの取得に失敗しました:', error);
+      console.log('データの取得に失敗しました: from SearchScreen.js', error);
     }
   };
 
   useEffect(() => {
     fetchData();
     getLocationAsync();
-  }, []);
+  });
 
   const handleMarkerPress = async (onsen) => {
     const onsenDetailResponse = await axios.get(`https://monaledge.com:8888/onsen/onsen_detail?onsen_id=${onsen.id}`);
@@ -129,13 +128,27 @@ const SearchScreen = () => {
     Linking.openURL(url);
   };
 
+  const onRegionChangeComplete = useCallback((newRegion) => {
+    setRegion(newRegion);
+  }, []);
+
+  const filteredOnsenList = useCallback(() => {
+    if (!region) return onsenList;
+
+    return onsenList.filter(onsen => {
+      const latDiff = Math.abs(onsen.lat - region.latitude);
+      const lonDiff = Math.abs(onsen.lon - region.longitude);
+      return latDiff <= region.latitudeDelta / 2 && lonDiff <= region.longitudeDelta / 2;
+    });
+  }, [onsenList, region]);
+
+
   if (!location) {
     return (
     <View style={{ flex: 1 }} >
       <Text>Loading...</Text>
     </View>);
   }
-
 
   return (
     <View style={{ flex: 1 }}>
@@ -148,10 +161,11 @@ const SearchScreen = () => {
             latitudeDelta: 0.5,
             longitudeDelta: 0.5,
           }}
+          onRegionChangeComplete={onRegionChangeComplete}
         >
-          {onsenList.map((onsen) => (
+          {filteredOnsenList().map((onsen, index) => (
             <Marker
-              key={onsen.onsen_id}
+              key={index}
               coordinate={{
                 latitude: onsen.lat,
                 longitude: onsen.lon,

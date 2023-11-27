@@ -23,6 +23,7 @@ const LoginScreen = () => {
       // ログイン成功の処理を行う
       const token = response.data.access_token;
       await SecureStore.setItemAsync('access_token', token);
+      console.log("token set")
       navigation.navigate('Home');
     } catch (error) {
       // ログイン失敗の処理を行う
