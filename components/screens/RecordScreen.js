@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView , StyleSheet, RefreshControl, Text, Button, Alert } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 
 // components
 import BarChartComponent from '../BarChartComponent';
@@ -14,6 +14,7 @@ const RecordScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   const fetchData = async () => {
     try {
@@ -35,8 +36,10 @@ const RecordScreen = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (isFocused) {
+      fetchData();
+    }
+  }, [isFocused]);
 
   const handleUserDelete = async () => {
     try {
