@@ -2,7 +2,7 @@
   "expo": {
     "name": "温泉マニア",
     "slug": "onsen-mania",
-    "version": "1.2.3",
+    "version": "1.3.5",
     "orientation": "portrait",
     "icon": "./assets/onsen-icon.png",
     "splash": {
@@ -24,6 +24,7 @@
       }
     },
     "android": {
+      "versionCode": 8,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
