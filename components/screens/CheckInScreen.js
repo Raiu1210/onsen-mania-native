@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { useIsFocused } from '@react-navigation/native';
 
 // components
 import OnsenCardComponent from '../OnsenCardComponent';
@@ -9,6 +10,7 @@ import OnsenCardComponent from '../OnsenCardComponent';
 const CheckInScreen = () => {
   const [myVisits, setMyVisits] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const isFocused = useIsFocused();
 
   const fetchData = async () => {
     try {
@@ -25,8 +27,10 @@ const CheckInScreen = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (isFocused) {
+      fetchData();
+    }
+  }, [isFocused]);
 
   return (
     <ScrollView style={styles.container}

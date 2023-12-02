@@ -5,7 +5,7 @@ import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
-
+import { useIsFocused } from '@react-navigation/native';
 
 const SearchScreen = () => {
   const [myVisits, setMyVisits] = useState([]);
@@ -13,7 +13,7 @@ const SearchScreen = () => {
   const [selectedOnsen, setSelectedOnsen] = useState(null);
   const [location, setLocation] = useState(null);
   const [region, setRegion] = useState(null);
-
+  const isFocused = useIsFocused();
   
   const getLocationAsync = async () => {
     try {
@@ -58,9 +58,11 @@ const SearchScreen = () => {
   };
 
   useEffect(() => {
-    fetchData();
-    getLocationAsync();
-  }, []);
+    if (isFocused) {
+      fetchData();
+      getLocationAsync();
+    }
+  }, [isFocused]);
 
   const handleMarkerPress = async (onsen) => {
     const onsenDetailResponse = await axios.get(`https://monaledge.com:8888/onsen/onsen_detail?onsen_id=${onsen.id}`);
@@ -156,6 +158,7 @@ const SearchScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <MapView
+          provider={MapView.PROVIDER_GOOGLE}
           style={{ flex: 1 }}
           showsUserLocation={true}
           initialRegion={{
