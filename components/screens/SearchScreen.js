@@ -58,11 +58,9 @@ const SearchScreen = () => {
   };
 
   useEffect(() => {
-    if (isFocused) {
-      fetchData();
-      getLocationAsync();
-    }
-  }, [isFocused]);
+    fetchData();
+    getLocationAsync();
+  }, []);
 
   const handleMarkerPress = async (onsen) => {
     const onsenDetailResponse = await axios.get(`https://monaledge.com:8888/onsen/onsen_detail?onsen_id=${onsen.id}`);
@@ -158,7 +156,6 @@ const SearchScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <MapView
-          provider={MapView.PROVIDER_GOOGLE}
           style={{ flex: 1 }}
           showsUserLocation={true}
           initialRegion={{
@@ -167,6 +164,7 @@ const SearchScreen = () => {
             latitudeDelta: 0.5,
             longitudeDelta: 0.5,
           }}
+          onRegionChangeComplete={onRegionChangeComplete}
         >
           {filteredOnsenList().map((onsen, index) => (
             <Marker

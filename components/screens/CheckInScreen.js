@@ -10,7 +10,7 @@ import OnsenCardComponent from '../OnsenCardComponent';
 const CheckInScreen = () => {
   const [myVisits, setMyVisits] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const isFocused = useIsFocused();
+  // const isFocused = useIsFocused();
 
   const fetchData = async () => {
     try {
@@ -27,10 +27,8 @@ const CheckInScreen = () => {
   };
 
   useEffect(() => {
-    if (isFocused) {
-      fetchData();
-    }
-  }, [isFocused]);
+    fetchData();
+  }, []);
 
   return (
     <ScrollView style={styles.container}
