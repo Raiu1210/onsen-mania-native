@@ -164,7 +164,6 @@ const SearchScreen = () => {
             latitudeDelta: 0.5,
             longitudeDelta: 0.5,
           }}
-          onRegionChangeComplete={onRegionChangeComplete}
         >
           {filteredOnsenList().map((onsen, index) => (
             <Marker
