@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import CheckInScreen from './CheckInScreen';
 import SearchScreen from './SearchScreen';
 import RecordScreen from './RecordScreen';
+import ContactScreen from './ContactScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,13 +39,15 @@ const HomeScreen = () => {
 
           if (route.name === 'Home') {
             iconName = 'home';
-          } else if (route.name === 'CheckIn') {
-            iconName = 'checkmark-circle';
-          } else if (route.name === 'Search') {
-            return <MaterialCommunityIcons name="map-search" size={size} color={color} />;
           } else if (route.name === 'Record') {
             return <MaterialCommunityIcons name="chart-bar" size={size} color={color} />;
-          }
+          } else if (route.name === 'Search') {
+            return <MaterialCommunityIcons name="map-search" size={size} color={color} />;
+          } else if (route.name === 'CheckIn') {
+            iconName = 'checkmark-circle';
+          } else if (route.name === 'ContactScreen') {
+            return <MaterialCommunityIcons name="message-text-outline" size={size} color={color} />
+          } 
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -53,6 +56,7 @@ const HomeScreen = () => {
       <Tab.Screen name="Record" component={RecordScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="CheckIn" component={CheckInScreen} />
+      <Tab.Screen name="ContactScreen" component={ContactScreen} />
     </Tab.Navigator>
   );
 };

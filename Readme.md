@@ -24,3 +24,7 @@ eas build --platform ios --auto-submit
 ### v1.4.0
 
 android buildが通るように修正
+
+### v1.5.0
+
+問い合わせフォームの追加
