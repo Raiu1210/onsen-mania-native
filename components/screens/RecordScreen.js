@@ -36,8 +36,9 @@ const RecordScreen = () => {
   };
 
   useEffect(() => {
-    if (isFocused) {
+    if (isFocused && myVisits.length === 0) {
       fetchData();
+      return ;
     }
   }, [isFocused]);
 
