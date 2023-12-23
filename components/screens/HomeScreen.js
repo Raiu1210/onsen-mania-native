@@ -23,6 +23,7 @@ const HomeScreen = () => {
       }
     } catch (error) {
       console.log('データの取得に失敗しました:', error);
+      navigation.navigate('Login');
     }
   };
 
