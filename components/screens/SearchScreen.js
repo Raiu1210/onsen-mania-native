@@ -156,7 +156,7 @@ const SearchScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <MapView
-          provider={PROVIDER_GOOGLE}
+          // provider={PROVIDER_GOOGLE} // switch iOS or Android
           style={{ flex: 1 }}
           showsUserLocation={true}
           initialRegion={{
