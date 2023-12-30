@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, Image, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
@@ -156,6 +156,7 @@ const SearchScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <MapView
+          provider={PROVIDER_GOOGLE}
           style={{ flex: 1 }}
           showsUserLocation={true}
           initialRegion={{
