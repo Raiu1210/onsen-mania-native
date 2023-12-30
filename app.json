@@ -24,12 +24,17 @@
       }
     },
     "android": {
-      "versionCode": 15,
+      "versionCode": 20,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.raiu.onsenmania"
+      "package": "com.raiu.onsenmania",
+      "config": {
+        "googleMaps" :{
+          "apiKey" : "AIzaSyAEd1yUEJ4Fou7-gwY8cfB6lBW-zQPETBI"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
