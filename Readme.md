@@ -2,6 +2,12 @@
 
 The official NativeBase template for [Expo](https://docs.expo.io/)
 
+# iOS/Android diff
+
+components/screens/SearchScreen.js
+
+のMapViewの部分をbuild時に切り替える
+
 ## Usage
 
 ```sh
