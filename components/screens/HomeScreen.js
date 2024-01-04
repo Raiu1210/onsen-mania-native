@@ -9,6 +9,7 @@ import CheckInScreen from './CheckInScreen';
 import SearchScreen from './SearchScreen';
 import RecordScreen from './RecordScreen';
 import ContactScreen from './ContactScreen';
+import MenuScreen from './MenuScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -48,6 +49,8 @@ const HomeScreen = () => {
             iconName = 'checkmark-circle';
           } else if (route.name === 'ContactScreen') {
             return <MaterialCommunityIcons name="message-text-outline" size={size} color={color} />
+          } else if (route.name === 'Menu') {
+            return <MaterialCommunityIcons name="menu" size={size} color={color} />;
           } 
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -58,6 +61,7 @@ const HomeScreen = () => {
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="CheckIn" component={CheckInScreen} />
       <Tab.Screen name="ContactScreen" component={ContactScreen} />
+      <Tab.Screen name="Menu" component={MenuScreen} />
     </Tab.Navigator>
   );
 };

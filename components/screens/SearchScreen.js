@@ -5,7 +5,6 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
-import { useIsFocused } from '@react-navigation/native';
 
 const SearchScreen = () => {
   const [myVisits, setMyVisits] = useState([]);
@@ -13,7 +12,7 @@ const SearchScreen = () => {
   const [selectedOnsen, setSelectedOnsen] = useState(null);
   const [location, setLocation] = useState(null);
   const [region, setRegion] = useState(null);
-  const isFocused = useIsFocused();
+  const [selectedOnsenVisitCount, setSelectedOnsenVisitCount] = useState(0);
   
   const getLocationAsync = async () => {
     try {
@@ -65,6 +64,8 @@ const SearchScreen = () => {
   const handleMarkerPress = async (onsen) => {
     const onsenDetailResponse = await axios.get(`https://monaledge.com:8888/onsen/onsen_detail?onsen_id=${onsen.id}`);
     setSelectedOnsen(onsenDetailResponse.data);
+    const visitCount = myVisits.filter(visit => visit.onsen_id === onsen.id).length;
+    setSelectedOnsenVisitCount(visitCount);
   };
 
   const closeCard = () => {
@@ -192,6 +193,10 @@ const SearchScreen = () => {
           </View>
           
           <Image source={{ uri: "https://monaledge.com:8888/thumbnails/" + selectedOnsen.image_path }} style={styles.image} />
+          <View style={styles.info}>
+            <Text style={styles.label}>訪問回数 :</Text>
+            <Text style={styles.value}>{selectedOnsenVisitCount} 回</Text>
+          </View>
           <View style={styles.info}>
             <Text style={styles.label}>住所 : </Text>
             <Text style={styles.value}>{selectedOnsen.address}</Text>
