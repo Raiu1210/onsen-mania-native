@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -14,7 +14,7 @@ const MenuScreen = () => {
     <View style={styles.container}>
       <TouchableOpacity 
         style={styles.item} 
-        onPress={() => navigateToScreen('AboutApp')}
+        onPress={() => Linking.openURL("https://monaledge.com/article/697")}
       >
         <MaterialCommunityIcons name="information-outline" size={24} color="#000" style={styles.icon} />
         <Text style={styles.title}>このアプリについて</Text>

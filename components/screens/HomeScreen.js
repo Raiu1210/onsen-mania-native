@@ -47,7 +47,7 @@ const HomeScreen = () => {
             return <MaterialCommunityIcons name="map-search" size={size} color={color} />;
           } else if (route.name === 'CheckIn') {
             iconName = 'checkmark-circle';
-          } else if (route.name === 'ContactScreen') {
+          } else if (route.name === 'Contact') {
             return <MaterialCommunityIcons name="message-text-outline" size={size} color={color} />
           } else if (route.name === 'Menu') {
             return <MaterialCommunityIcons name="menu" size={size} color={color} />;
@@ -60,7 +60,7 @@ const HomeScreen = () => {
       <Tab.Screen name="Record" component={RecordScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="CheckIn" component={CheckInScreen} />
-      <Tab.Screen name="ContactScreen" component={ContactScreen} />
+      <Tab.Screen name="Contact" component={ContactScreen} />
       <Tab.Screen name="Menu" component={MenuScreen} />
     </Tab.Navigator>
   );
